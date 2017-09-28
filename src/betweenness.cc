@@ -11,11 +11,66 @@ const ll LINF = 0x3f3f3f3f3f3f3f3fll;
 
 #define MAXN 200
 
+int n;
 vector<ii> graph[MAXN];
+vector<int> gtmp[MAXN];
 ll father[MAXN];
 ll dist[MAXN];
 bool informed[MAXN];
-ll vcnt[MAXN];
+ll vcnt[MAXN], vtmp[MAXN];
+ll inDegree[MAXN];
+bool visited[MAXN];
+stack<int> topo;
+
+
+void dfs(int u)
+{
+  if(visited[u]) return;
+  visited[u] = true;
+
+  for(int v : gtmp[u])
+    if(!visited[v]) dfs(v);
+  topo.push(u);
+}
+
+
+void backcnt()
+{
+  // TopoSort
+  memset(visited, false, sizeof(visited));
+  memset(vtmp, 0, sizeof(vtmp));
+  while(!topo.empty()) topo.pop();
+  for(int i = 0; i < n; i++)
+    if(!visited[i]) dfs(i);
+  
+  for(int i = 0; i < n; i++)
+  {
+    cout << i << ":";
+    for(int v : gtmp[i])
+      cout << " " << v;
+    cout << endl;
+  }
+
+  // Updating vtmp...
+  while(!topo.empty())
+  {
+    int cur = topo.top();
+    cout << cur << " ";
+    topo.pop();
+    
+    if(inDegree[cur] == 0) vtmp[cur] = 1;
+    for(int v : gtmp[cur])
+      vtmp[v] += vtmp[cur];
+  }
+  cout << endl << endl;
+  
+  for(int i = 0; i < n; i++)
+    if(inDegree[i] == 0 || gtmp[i].size() == 0)
+      vtmp[i] = 0;
+
+  for(int i = 0; i < n; i++)
+    vcnt[i] += vtmp[i];  
+}
 
 void dijkstra(ll begone)
 {
@@ -24,9 +79,10 @@ void dijkstra(ll begone)
   pq.insert(mp(0, begone));
   memset(dist, INF, sizeof(dist));
   memset(father, -1, sizeof(father));
+  memset(inDegree, 0, sizeof(inDegree));
   dist[begone] = 0;
-  father[begone] = begone;
-
+  for(int i = 0; i < MAXN; i++) gtmp[i].clear();
+  
   while(!pq.empty())
   {
     ii cur = *pq.begin();
@@ -42,18 +98,28 @@ void dijkstra(ll begone)
       if(dist[u]+we < dist[v])
       {
         dist[v] = dist[u]+we;
-        father[v] = u;
+        for(int tmp : gtmp[v])
+          inDegree[tmp]--;
+        gtmp[v].clear();
+        gtmp[v].pb(u);
+        inDegree[u] = 1;
         pq.insert(mp(dist[v], v));
+      }
+      else if(dist[u]+we == dist[v])
+      {
+        gtmp[v].pb(u);
+        inDegree[u] += 1;
       }
     }
   }
+  cout << "UE " << begone << endl;
+  backcnt();
 }
 
 int main()
 {
   ios::sync_with_stdio(false);
   
-  int n = 0;
   while(true)
   {
     int u, v, c;
@@ -75,25 +141,9 @@ int main()
   n += 1;
   
   for(int i = 0; i < n; i++)
-  {
     if(informed[i])
-    {
       dijkstra(i);
-      for(int j = 0; j < n; j++)
-      {
-        if(informed[j])
-        {
-          int p = father[j];
-          while(p != i)
-          {
-            vcnt[p]++;
-            p = father[p];
-          }
-        }
-      }
-    }
-  }
-  
+
   vector<pair<int, int> > vresp;
   for(int i = 0; i < MAXN; i++)
     if(informed[i]) vresp.pb(mp(-vcnt[i], i));
