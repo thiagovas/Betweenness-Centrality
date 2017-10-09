@@ -55,21 +55,23 @@ void backcnt()
   while(!topo.empty())
   {
     int cur = topo.top();
-    cout << cur << " ";
     topo.pop();
     
     if(inDegree[cur] == 0) vtmp[cur] = 1;
     for(int v : gtmp[cur])
       vtmp[v] += vtmp[cur];
   }
-  cout << endl << endl;
   
   for(int i = 0; i < n; i++)
     if(inDegree[i] == 0 || gtmp[i].size() == 0)
       vtmp[i] = 0;
-
+  
   for(int i = 0; i < n; i++)
-    vcnt[i] += vtmp[i];  
+  {
+    cout << i << ":" << vtmp[i] << " ";
+    vcnt[i] += vtmp[i];
+  }
+  cout << endl << endl;
 }
 
 void dijkstra(ll begone)
@@ -98,20 +100,22 @@ void dijkstra(ll begone)
       if(dist[u]+we < dist[v])
       {
         dist[v] = dist[u]+we;
-        for(int tmp : gtmp[v])
-          inDegree[tmp]--;
         gtmp[v].clear();
         gtmp[v].pb(u);
-        inDegree[u] = 1;
         pq.insert(mp(dist[v], v));
       }
       else if(dist[u]+we == dist[v])
-      {
         gtmp[v].pb(u);
-        inDegree[u] += 1;
-      }
     }
   }
+  
+  for(int i = 0; i < n; i++)
+    for(int v : gtmp[i])
+    {
+      //if(i == 2) cout << v << " ";
+      inDegree[v]++;
+    }
+  //cout << endl;
   cout << "UE " << begone << endl;
   backcnt();
 }
