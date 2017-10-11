@@ -111,12 +111,7 @@ void dijkstra(ll begone)
   
   for(int i = 0; i < n; i++)
     for(int v : gtmp[i])
-    {
-      //if(i == 2) cout << v << " ";
       inDegree[v]++;
-    }
-  //cout << endl;
-  cout << "UE " << begone << endl;
   backcnt();
 }
 
