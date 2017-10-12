@@ -1,3 +1,7 @@
+// Don't mind this code.
+// I understood the school work wrong.
+// Betwhining is the wrong version of betweenness.
+
 #include <bits/stdc++.h>
 using namespace std;
 
