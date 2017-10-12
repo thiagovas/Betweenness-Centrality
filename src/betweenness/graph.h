@@ -19,7 +19,9 @@ class Graph {
     void addEdge(int u, int v, int c);
   
     // Returns the betweenness value for each vertex.
-    std::vector<int> betweenness();
+    std::vector<long double> betweenness();
+    
+    int nVertices() { return this->nVertices_; }
 
   private:
     
@@ -43,8 +45,8 @@ class Graph {
     
     // This function will compute the value of dependency of u,
     // given s.
-    void computeDependency(const vector<vector<int> >& dag,
-                           int s, int u);
+    long double computeDependency(const vector<vector<int> >& dag,
+                                  int s, int u);
     
     // Dijkstra's Algorithm
     // It's ran from vertex s

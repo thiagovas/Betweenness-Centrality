@@ -55,3 +55,9 @@ void Inputter::mapvertex(int u)
     this->nVertices++;
   }
 }
+    
+
+int Inputter::getVertexId(int permutationIndex)
+{
+  return this->permtoinput[permutationIndex];
+}

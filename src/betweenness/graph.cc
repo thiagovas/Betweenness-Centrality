@@ -16,15 +16,15 @@ void Graph::addEdge(int u, int v, int c)
   this->graph[v].push_back(std::make_pair(u, c));
 }
 
-void Graph::betweenness()
+std::vector<long double> Graph::betweenness()
 {
   // On this function I run a Dijkstra from every vertex.
   // Then, I compute the dependency values
   // Sum them all and return the betweennesses.
   
   // Just cleaning the table before anything.
-  for(int i = 0; i < this->vsigma.size(); i++)
-    for(int j = 0; j < this->vsigma[i].size(); j++)
+  for(unsigned i = 0; i < this->vsigma.size(); i++)
+    for(unsigned j = 0; j < this->vsigma[i].size(); j++)
      this->vsigma[i][j] = 0;
   
   
@@ -38,12 +38,22 @@ void Graph::betweenness()
       this->computeDependency(dag, i, j);
   }
   
+  std::vector<long double> vbetweenness(this->nVertices_, 0);
   
+  for(int i = 0; i < this->nVertices_; i++)
+  {
+    for(int j = 0; j < this->nVertices_; j++)
+    {
+      if(i == j) continue;
+      vbetweenness[j] += this->vdependency[i][j];
+    }
+  }
   
+  return vbetweenness;
 }
 
-void Graph::computeDependency(const std::vector<std::vector<int> > &dag,
-                              int s, int u)
+long double Graph::computeDependency(const std::vector<std::vector<int> > &dag,
+                                     int s, int u)
 {
   if(this->vdependency[s][u] < EPS)
   {

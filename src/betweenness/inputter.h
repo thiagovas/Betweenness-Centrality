@@ -19,7 +19,9 @@ class Inputter {
     
     // This function just serves to read the input and returns the graph.
     Graph readInput();
-  
+   
+    int getVertexId(int permutationIndex);
+
   private:
     
     // It maps the integer received from the input to the
