@@ -52,5 +52,6 @@ void Inputter::mapvertex(int u)
   {
     this->inputtoperm[u] = this->nVertices;
     this->permtoinput[this->nVertices] = u;
+    this->nVertices++;
   }
 }
