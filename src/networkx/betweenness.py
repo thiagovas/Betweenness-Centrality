@@ -1,7 +1,7 @@
 import sys
 import networkx as nx
 
-g = nx.Graph();
+g = nx.MultiGraph();
 
 while True:
     u, v, c = map(int, raw_input().split(','))

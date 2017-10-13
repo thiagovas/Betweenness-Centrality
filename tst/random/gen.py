@@ -13,7 +13,7 @@ from random import randint
 from random import shuffle
 
 def initUnionFind():
-  return [x for x in range(200)]
+  return [x for x in range(5000)]
 
 def Find(uf, a):
   if uf[a] == a:
@@ -27,8 +27,13 @@ def Union(uf, a, b):
 
 def gen(filename):
 
-  n = randint(10, 100)
-  m = randint(2*n, (n*(n-1))//2)
+  #n = randint(10, 100)
+  #m = randint(2*n, (n*(n-1))//2)
+  
+  n = 2000
+  m = (n*(n-1))//2
+  
+  
   edges = []
   resp_edges = []
   
@@ -50,7 +55,7 @@ def gen(filename):
   
   fout = open(filename, 'w')
   for (a, b) in resp_edges:
-    fout.write(str(a) + "," + str(b) + "," + str(randint(1, 100)) + "\n")
+    fout.write(str(a) + "," + str(b) + "," + str(randint(1, 99)) + "\n")
   fout.write("0,0,0\n")
   fout.close()
   

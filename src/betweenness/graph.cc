@@ -44,7 +44,7 @@ std::vector<long double> Graph::betweenness()
   {
     for(int j = 0; j < this->nVertices_; j++)
     {
-      //if(i == j) continue;
+      if(i == j) continue;
       vbetweenness[j] += this->vdependency[i][j];
     }
   }
