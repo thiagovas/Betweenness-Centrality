@@ -8,6 +8,16 @@
 #include "inputter.h"
 using namespace std;
 
+
+// Comparison function
+bool comp(const pair<long double, int>& pa, const pair<long double, int>& pb)
+{
+  // This function was implemented only because comparisons between
+  // two floating points must be done with an EPSILON...
+  if(fabs(pa.first-pb.first) < 1e-7) return pa.second < pb.second;
+  return pa.first > pb.first;
+}
+
 int main()
 {
   Inputter inp;
@@ -19,10 +29,10 @@ int main()
   vector<std::pair<long double, int> > vtmp;
 
   for(int i = 0; i < g.nVertices(); i++)
-    vtmp.push_back(std::make_pair(-vbet[i], i));
+    vtmp.push_back(std::make_pair(vbet[i], inp.getVertexId(i)));
   
   // Sorting it, so I can print everything beautifully :)
-  std::sort(vtmp.begin(), vtmp.end());
+  std::sort(vtmp.begin(), vtmp.end(), comp);
   
   for(int i = 0; i < g.nVertices(); i++)
   {

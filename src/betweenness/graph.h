@@ -27,7 +27,7 @@ class Graph {
     
     // Just an Epsilon value...
     // I use this to make double comparisons.
-    const long double EPS = 1e-5;
+    const long double EPS = 1e-6;
 
     int nVertices_;
 

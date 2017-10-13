@@ -55,7 +55,7 @@ std::vector<long double> Graph::betweenness()
 long double Graph::computeDependency(const std::vector<std::vector<int> > &dag,
                                      int s, int u)
 {
-  if(this->vdependency[s][u] < EPS)
+  if(this->vdependency[s][u] < -EPS)
   {
     this->vdependency[s][u] = 0;
     for(int v : dag[u])
