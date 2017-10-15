@@ -1,5 +1,5 @@
 CC=g++
-CC_FLAGS=-O2 -Wall -lm -std=c++11
+CC_FLAGS=-O2 -Wall -std=c++11
 BIN=./bin
 
 all: prep build clearafter

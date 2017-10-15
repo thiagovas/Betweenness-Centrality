@@ -14,7 +14,7 @@ bool comp(const pair<long double, int>& pa, const pair<long double, int>& pb)
 {
   // This function was implemented only because comparisons between
   // two floating points must be done with an EPSILON...
-  if(fabs(pa.first-pb.first) < 1e-8) return pa.second < pb.second;
+  if(fabsl(pa.first-pb.first) < 1e-8) return pa.second < pb.second;
   return pa.first > pb.first;
 }
 
