@@ -1,4 +1,7 @@
+#include <algorithm>
+#include <queue>
 #include <set>
+#include <stack>
 
 #include "graph.h"
 
@@ -6,8 +9,8 @@ Graph::Graph(int nVertices)
 {
   this->nVertices_ = nVertices;
   this->graph.resize(nVertices);
-  this->vsigma.resize(nVertices, std::vector<long long int>(nVertices, 0));
-  this->vdependency.resize(nVertices, std::vector<long double>(nVertices, -1));
+  this->vsigma.resize(nVertices, 0);
+  this->vbetweenness.resize(nVertices, 0);
 }
 
 void Graph::addEdge(int u, int v, int c)
@@ -22,91 +25,69 @@ std::vector<long double> Graph::betweenness()
   // Then, I compute the dependency values
   // Sum them all and return the betweennesses.
   
-  // Just cleaning the table before anything.
-  for(unsigned i = 0; i < this->vsigma.size(); i++)
-    for(unsigned j = 0; j < this->vsigma[i].size(); j++)
-     this->vsigma[i][j] = 0;
-  
   
   // Running all Dijkstras, after this step,
-  // vsigma and the dependency matrices will be computed.  
+  // vsigma and the dependency matrices will be computed.
+  // As well as the vbetweenness vector.
   for(int i = 0; i < this->nVertices_; i++)
-  {
-    std::vector<std::vector<int> > dag = dijkstra(i);
-
-    for(int j = 0; j < this->nVertices_; j++)
-      this->computeDependency(dag, i, j);
-  }
-  
-  std::vector<long double> vbetweenness(this->nVertices_, 0);
-  
-  for(int i = 0; i < this->nVertices_; i++)
-  {
-    for(int j = 0; j < this->nVertices_; j++)
-    {
-      if(i == j) continue;
-      vbetweenness[j] += this->vdependency[i][j];
-    }
-  }
+    dijkstra(i);
   
   return vbetweenness;
 }
 
-long double Graph::computeDependency(const std::vector<std::vector<int> > &dag,
-                                     int s, int u)
+void Graph::dijkstra(int s)
 {
-  if(this->vdependency[s][u] < -EPS)
-  {
-    this->vdependency[s][u] = 0;
-    for(int v : dag[u])
-    {
-      long double factor = ((long double)this->vsigma[s][u]) / 
-                                         this->vsigma[s][v];
-      factor *= 1 + computeDependency(dag, s, v);
-      this->vdependency[s][u] += factor;
-    }
-  }
+  // Dijkstra's Priority Queue
+  std::set<std::pair<long long int, std::pair<int, int> > > pq;
   
-  return this->vdependency[s][u];
-}
-
-std::vector<std::vector<int> > Graph::dijkstra(int s)
-{
-  std::set<std::pair<int, std::pair<int, int> > > pq;
-  std::vector<int> vdist(this->nVertices_, 0x3f3f3f3f);
+  std::vector<long long int> vDist(this->nVertices_, 0x3f3f3f3f3f3f3f3fll);
+  std::stack<int> S;
+  std::vector<std::vector<int> > vChildren(this->nVertices_);
   std::vector<bool> visited(this->nVertices_, false);
-  std::vector<std::vector<int> > dag(this->nVertices_);
   
+  this->vsigma.assign(this->nVertices_, 0);
   pq.insert(std::make_pair(0, std::make_pair(s, s)));
-  vdist[s] = 0;
-  vsigma[s][s] = 1;
+  vDist[s] = 0;
+  vsigma[s] = 1;
   
   while(!pq.empty())
   {
     std::pair<int, std::pair<int, int> > cur = *pq.begin();
     pq.erase(pq.begin());
     int u = cur.second.first;
-    int w = cur.first;
+    long long int w = cur.first;
     int father = cur.second.second;
-    if(vdist[u] < w) continue;
-    if(u != father)
-    {
-      vsigma[s][u] += vsigma[s][father];
-      dag[father].push_back(u);
-    }
+    if(vDist[u] < w) continue;
+    
+    
+    vsigma[u] += vsigma[father];
+    vChildren[u].push_back(father);
+    
     if(visited[u]) continue;
+    S.push(u);
     visited[u] = true;
     
     for(std::pair<int, int> pe : this->graph[u])
     {
       int v = pe.first;
-      int we = pe.second;
-      if(vdist[u]+we <= vdist[v])
+      long long int we = pe.second;
+      if(vDist[u]+we <= vDist[v])
       {
-        vdist[v] = vdist[u]+we;
-        pq.insert(std::make_pair(vdist[v], std::make_pair(v, u)));
+        vDist[v] = vDist[u]+we;
+        pq.insert(std::make_pair(vDist[v], std::make_pair(v, u)));
       }
     }
   }
-  return dag;
+  
+  std::vector<long double> vDependency(this->nVertices_, 0);
+  
+  while(!S.empty())
+  {
+    int cur = S.top();
+    S.pop();
+    long double factor = ((long double)1.0 + vDependency[cur])/((long double)vsigma[cur]);
+    for(int v : vChildren[cur])
+      vDependency[v] += ((long double) vsigma[v])*factor;
+    if(cur != s) this->vbetweenness[cur] += vDependency[cur]/2.0;
+  }
 }

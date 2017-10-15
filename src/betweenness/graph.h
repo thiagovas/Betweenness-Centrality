@@ -27,31 +27,28 @@ class Graph {
     
     // Just an Epsilon value...
     // I use this to make double comparisons.
-    const long double EPS = 1e-6;
+    const long double EPS = 1e-7;
 
     int nVertices_;
 
-    // Sigma matrix.
+    // Sigma vector.
     // It holds the number of paths there exists between every
     // pair of vertices of graph.
-    vector<vector<long long int> > vsigma;
+    // Used temporarily at dijkstra's function.
+    vector<long long int> vsigma;
     
     // Representation of a weighted graph.
     vector<vector<pair<int, int> > > graph;
     
-    // Dependency Matrix.
-    vector<vector<long double> > vdependency;
+    // This is the vector that keeps the betweennesses values.
+    vector<long double> vbetweenness;
 
-    
-    // This function will compute the value of dependency of u,
-    // given s.
-    long double computeDependency(const vector<vector<int> >& dag,
-                                  int s, int u);
     
     // Dijkstra's Algorithm
     // It's ran from vertex s
     // At this function, vsigma is updated.
-    vector<vector<int> > dijkstra(int s);
+    // And vbetweenness is calculated on the fly.
+    void dijkstra(int s);
 };
 
 
