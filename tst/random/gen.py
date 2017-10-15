@@ -27,11 +27,11 @@ def Union(uf, a, b):
 
 def gen(filename):
 
-  #n = randint(10, 100)
-  #m = randint(2*n, (n*(n-1))//2)
+  n = randint(10, 100)
+  m = randint(2*n, (n*(n-1))//2)
   
-  n = 2000
-  m = (n*(n-1))//2
+  #n = 2000
+  #m = (n*(n-1))//2
   
   
   edges = []
@@ -50,7 +50,7 @@ def gen(filename):
   
   for i in range(n):
     if(Find(uf, i) != Find(uf, 0)):
-      Union(i, 0)
+      Union(uf, i, 0)
       resp_edges.append((i, 0))
   
   fout = open(filename, 'w')

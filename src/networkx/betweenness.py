@@ -17,10 +17,16 @@ for key, value in ans.iteritems():
   ue.append((-value, key))
 
 ue.sort()
-for (value, key) in ue:
-  print str(key), ":", str(-value)
+#for (value, key) in ue:
+#  print str(key), ":", str(-value)
 
-sys.stdout.write("\n")
+#sys.stdout.write("\n")
+jafoi = False
 for (value, key) in ue:
-  sys.stdout.write(str(key)+",")
+  if jafoi:
+    sys.stdout.write(','+str(key))
+  else:
+    jafoi = True
+    sys.stdout.write(str(key))
+
 sys.stdout.write("\n")

@@ -34,9 +34,9 @@ int main()
   // Sorting it, so I can print everything beautifully :)
   std::sort(vtmp.begin(), vtmp.end(), comp);
   
-  for(int i = 0; i < vtmp.size(); i++)
-    cout << vtmp[i].second << " " << vtmp[i].first << endl;
-  cout << endl;
+  //for(int i = 0; i < vtmp.size(); i++)
+  //  cout << vtmp[i].second << " " << vtmp[i].first << endl;
+  //cout << endl;
 
   for(int i = 0; i < g.nVertices(); i++)
   {
