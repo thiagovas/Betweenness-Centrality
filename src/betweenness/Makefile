@@ -1,8 +1,11 @@
 CC=g++
-CC_FLAGS=-O2 -Wall -lm -std=c++11
+CC_FLAGS=-O2 -Wall -std=c++11
 BIN=./bin
 
-all: build clearafter
+all: prep build clearafter
+
+prep:
+	mkdir -p $(BIN)
 
 build: main.o graph.o inputter.o
 	$(CC) $(BIN)/* -o main $(CC_FLAGS)

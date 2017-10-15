@@ -14,7 +14,7 @@ bool comp(const pair<long double, int>& pa, const pair<long double, int>& pb)
 {
   // This function was implemented only because comparisons between
   // two floating points must be done with an EPSILON...
-  if(fabs(pa.first-pb.first) < 1e-7) return pa.second < pb.second;
+  if(fabsl(pa.first-pb.first) < 1e-8) return pa.second < pb.second;
   return pa.first > pb.first;
 }
 
@@ -34,10 +34,6 @@ int main()
   // Sorting it, so I can print everything beautifully :)
   std::sort(vtmp.begin(), vtmp.end(), comp);
   
-  //for(int i = 0; i < vtmp.size(); i++)
-  //  cout << vtmp[i].second << " " << vtmp[i].first << endl;
-  //cout << endl;
-
   for(int i = 0; i < g.nVertices(); i++)
   {
     if(i == 0) cout << vtmp[i].second;
