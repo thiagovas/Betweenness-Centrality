@@ -24,7 +24,11 @@ Neste trabalho, seguindo uma modelagem usando teoria dos grafos, definimos matem
 
 \section{Modelagem do Problema e Solução Proposta}
 Para resolver o problema definido acima, começamos modelando a rede de influências de deputados como um grafo $G(V, E)$. No grafo $G$, cada vértice $v \in V$ representa um deputado, cada aresta deste grafo, que liga deputado $u$ a deputado $v$, contém um peso que representa o nível de similaridade dos votos entre os deputados. Assim, temos os limites dos pesos das arestas de $G$: $0 \leq w_e \leq 100 \quad \forall e \in E$.\\
-Para resolver o problema de ordenar os deputados por ordem de influência, fizemos uma pequena alteração no grafo. Para aresta, agora temos que: $w_e = 100 - w_e$. Após esta alteração 
+Para resolver o problema de ordenar os deputados por ordem de influência, fizemos uma pequena alteração no grafo. Para cada aresta $e \in E$, agora temos que: $w_e = 100 - w_e$. Após esta alteração, para cada deputado $u$, consideremos a dificuldade de $u$ influenciar um deputado $v$ como sendo o peso do caminho mínimo entre $u$ e $v$. Esta consideração é condizente com o problema proposto, dado que após a modificação de $G$, temos que os pesos das arestas representariam o quão "difícil" seria de um deputado qualquer influenciar o seu vizinho em $G$.\\
+Após essas definições, podemos definir o nível de influêcia de um deputado. Dado que um deputado qualquer irá influenciar um outro a partir de deputados intermediários que formem um caminho mínimo até o deputado destino. Definimos a influência de um deputado $v$ como:
+$$g(v) = \sum_{s \neq t \neq v} \frac{\sigma_{st}(v)}{\sigma_{st}}$$
+Sendo $\sigma_{st}$ o número de caminhos mínimos de $s$ a $t$, $\sigma_{st}(v)$ o número de caminhos mínimos de $s$ a $t$ que passam por $v$.\\
+Esta definição é conhecida na literatura como betweenness centrality.
 
 
 \section{Análise de Complexidade}
