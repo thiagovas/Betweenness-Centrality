@@ -1,0 +1,54 @@
+\documentclass[10pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{\textbf{Documentação\\Trabalho Prático - Grafos}\\Projeto e Análise de Algoritmos}
+\author{Thiago Vieira de Alcantara Silva\\2017719891}
+\date{16 de Outubro de 2017}
+\begin{document}
+
+\maketitle
+
+\section{Introdução}
+% Introdução com uma explicação clara e objetiva de como o problema que foi resolvido, justificando os algoritmos e as estruturas de dados utilizadas. Para auxiliar nessa atividade utilize pseudocódigos, diagramas e demais figuras que achar conveniente. Não é necessário incluir trechos de código da sua implementação e nem mostrar maiores detalhes da sua implementação, exceto quando esses influenciam no seu algoritmo principal
+
+O problema em que fomos apresentados neste trabalho prático, surge a partir de análises feitas sobre as relações em que deputados mantém no congresso.
+Para que pautas sejam aprovadas, ou rejeitadas, deputados tendem a influenciar outros deputados a votarem de acordo com seus interesses.
+Sempre podemos estimar o nível de concordância de dois deputados. Com isso, podemos avaliar quais deputados seriam os mais influentes no congresso.
+Neste trabalho, seguindo uma modelagem usando teoria dos grafos, definimos matematicamente a influência de um deputado e implementamos uma solução para ordenar os deputados em relação ao seus níveis de influência.
+
+\section{Modelagem do Problema e Solução Proposta}
+Para resolver o problema definido acima, começamos modelando a rede de influências de deputados como um grafo $G(V, E)$. No grafo $G$, cada vértice $v \in V$ representa um deputado, cada aresta deste grafo, que liga deputado $u$ a deputado $v$, contém um peso que representa o nível de similaridade dos votos entre os deputados. Assim, temos os limites dos pesos das arestas de $G$: $0 \leq w_e \leq 100 \quad \forall e \in E$.\\
+Para resolver o problema de ordenar os deputados por ordem de influência, fizemos uma pequena alteração no grafo. Para aresta, agora temos que: $w_e = 100 - w_e$. Após esta alteração 
+
+
+\section{Análise de Complexidade}
+% TODO: Fazer análise em relação a tempo e espaço.
+
+
+
+\section{Análise Empírica}
+% Análise experimental que avalie o tempo de execução do seu código em função das características da entrada, tais como, o número de vértices e de arestas. Cabe a você gerar as entradas para esses experimentos. A apresentação dos resultados pode ser feita em gráficos e tabelas que achar conveniente juntamente como as interpretações obtidas neles.
+
+
+\subsection{Testes}
+\subsection{Especificações Técnicas}
+
+
+\section{Instruções para Utilização do Programa}
+\subsection{Compilação}
+\subsection{Execução}
+
+
+\section{Conclusão}
+
+
+\appendix
+\section{Organização dos Arquivos}
+
+\end{document}
