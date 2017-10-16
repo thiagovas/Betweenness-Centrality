@@ -6,11 +6,38 @@
 \usepackage[a4paper, margin=1in]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{forest}
+
+
+\definecolor{folderbg}{RGB}{124,166,198}
+\definecolor{folderborder}{RGB}{110,144,169}
+
+\def\Size{4pt}
+\tikzset{
+  folder/.pic={
+    \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+      (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);  
+    \filldraw[draw=folderborder,top color=folderbg!50,bottom color=folderbg]
+      (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+  }
+}
+
+
 
 \title{\textbf{Documentação\\Trabalho Prático - Grafos}\\Projeto e Análise de Algoritmos}
 \author{Thiago Vieira de Alcantara Silva\\2017719891}
 \date{16 de Outubro de 2017}
 \begin{document}
+
+
+
+\renewcommand\refname{Referências}
+
+
 
 \maketitle
 
@@ -28,31 +55,140 @@ Para resolver o problema de ordenar os deputados por ordem de influência, fizem
 Após essas definições, podemos definir o nível de influêcia de um deputado. Dado que um deputado qualquer irá influenciar um outro a partir de deputados intermediários que formem um caminho mínimo até o deputado destino. Definimos a influência de um deputado $v$ como:
 $$g(v) = \sum_{s \neq t \neq v} \frac{\sigma_{st}(v)}{\sigma_{st}}$$
 Sendo $\sigma_{st}$ o número de caminhos mínimos de $s$ a $t$, $\sigma_{st}(v)$ o número de caminhos mínimos de $s$ a $t$ que passam por $v$.\\
-Esta definição é conhecida na literatura como betweenness centrality.
+Esta definição é conhecida na literatura como \textit{betweenness centrality}. E por esta medida, tentamos capturar quais deputados são os mais usados como intermediários entre acordos. Assim, para resolver o problema da ordenação de deputados por influência, simplesmente calculamos o \textit{betweenness centrality} de todos os vértices de $G$.
 
+
+\section{Detalhes de Implementação}
+Este trabalho foi desenvolvido usando C++11.
+E Para calcular o \textit{betweenness} de cada vértice, utilizamos o algoritmo de Brandes\cite{brandes2001faster}. Devido ao risco de erros de precisão, durante este trabalho procuramos sempre usar variáveis \textit{long long int} e \textit{long double} ( que pode chegar a ter 80 bits )\cite{longDoubleWiki}, além de evitar fazer operações com números de magnitudes extremamente divergentes.
 
 \section{Análise de Complexidade}
-% TODO: Fazer análise em relação a tempo e espaço.
+No algoritmo de Brandes, basicamente rodamos um algoritmo de Dijkstra para cada vértice $s \in V$, calculando a matrix $\sigma$ e o vetor de dependências $\delta$. Todos estes cálculos são feitos à medida que o algoritmo de Dijkstra é executado. E o custo de cada operação desta é $O(1)$ para cada loop.\\
+Ao final de cada execução do Dijkstra, calculamos o vetor de dependências $\delta$ em $O(|E|)$.\\
+Assim, como utilizamos a $priority\_queue$ da biblioteca padrão de C++, cada execução do Dijkstra é executada em $O(|E| + |E| * log |V|)$, logo $O(|E| * log |V|)$.\\
+Como executamos $|V|$ vezes o algoritmo de Dijkstra, temos que o custo em relação ao tempo para calcular o valor de \textit{betweenness} de cada vértice é $O(|E| * |V| * log |V|)$. Todas as outras operações, como tratamento da entrada ou ordenação do vetor resposta são feitas em no máximo $O(|E| * log |V|)$, assim temos a complexidade final de $\bm{O(|E| * |V| * log |V|)}$.\\
 
+Em relação ao espaço gasto temos o seguinte:\\
+Para economizar espaço, representamos somente uma linha da matriz $\sigma$ por execução de Dijkstra, gastando assim somente $O(|V|)$ de memória. Para representarmos o grafo da entrada, assim como o grafo intermediário dos caminhos mínimos, utilizamos uma lista de adjacência, gastando $O(|V| + |E|)$. Todos os outros vetores e maps da nossa implementação, como o vetor resposta, o vetor de distâncias do Dijkstra, o vetor de dependências e os maps usados no tratamento da entrada gastam $O(|V|)$ de espaço. Assim temos a complexidade final em relação a espaço de $\bm{O(|V| + |E|)}$.
 
 
 \section{Análise Empírica}
 % Análise experimental que avalie o tempo de execução do seu código em função das características da entrada, tais como, o número de vértices e de arestas. Cabe a você gerar as entradas para esses experimentos. A apresentação dos resultados pode ser feita em gráficos e tabelas que achar conveniente juntamente como as interpretações obtidas neles.
 
 
-\subsection{Testes}
-\subsection{Especificações Técnicas}
 
 
 \section{Instruções para Utilização do Programa}
 \subsection{Compilação}
+Para compilar o programa, foram disponibilizadas duas opções:\\
+(1) \textit{Makefile}, que pode ser executado apenas executando:
+\begin{lstlisting}[language=bash]
+  $ make
+\end{lstlisting}
+
+\noindent
+(2) \textit{compilar.sh}, um script bash que compila o código. Para executá-lo:
+\begin{lstlisting}[language=bash]
+  $ bash compilar.sh
+\end{lstlisting}
+
+\noindent
+Ou ainda:
+\begin{lstlisting}[language=bash]
+  $ ./compilar.sh
+\end{lstlisting}
+Se as permissões de execução de \textit{compilar.sh} estiverem ativadas.\cite{scriptPermissionsStack}
+
+
 \subsection{Execução}
+O programa usa a entrada e saída padrões. Assim, há duas opções de execução do programa:\\
+(1) Executá-lo direto da pasta \textit{bin} e redirecionar a entrada e saída:
+\begin{lstlisting}[language=bash]
+  $ ./bin/main < in > out
+\end{lstlisting}
+
+\noindent
+(2) \textit{executar.sh}, um script bash que recebe o nome do arquivo de entrada e o de saída e executa o programa:
+\begin{lstlisting}[language=bash]
+  $ bash executar.sh in out
+\end{lstlisting}
+
+\noindent
+Ou ainda:
+\begin{lstlisting}[language=bash]
+  $ ./executar.sh in out
+\end{lstlisting}
+Se as permissões de execução de \textit{executar.sh} estiverem ativadas.\cite{scriptPermissionsStack}
+
 
 
 \section{Conclusão}
 
+Neste trabalho modelamos o problema de ordenar um conjunto de deputados de acordo com seus níveis de influência. Para isto, utilizamos a teoria dos grafos para modelar a rede de influências, e definimos o nível de influência de cada deputado a partir da definição de \textit{betweenness centrality}. Para calcular o valor de \textit{betweenness} de cada vértice, utilizamos o algoritmo de Brandes. Executamos testes empíricos e obtemos resultados satisfatórios em relação ao tempo de execução.
+
 
 \appendix
 \section{Organização dos Arquivos}
+ \begin{forest}
+      for tree={
+        font=\ttfamily,
+        grow'=0,
+        child anchor=west,
+        parent anchor=south,
+        anchor=west,
+        calign=first,
+        inner xsep=7pt,
+        edge path={
+          \noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) pic {folder} \forestoption{edge label};
+        },
+        % style for your file node 
+        file/.style={edge path={\noexpand\path [draw, \forestoption{edge}]
+          (!u.south west) +(7.5pt,0) |- (.child anchor) \forestoption{edge label};},
+          inner xsep=2pt,font=\small\ttfamily
+                     },
+        before typesetting nodes={
+          if n=1
+            {insert before={[,phantom]}}
+            {}
+        },
+        fit=band,
+        before computing xy={l=15pt},
+      }  
+    [\path{\ }
+      [compilar.sh, file
+      ]
+      [executar.sh, file
+      ]
+      [Makefile, file
+      ]
+      [doc
+        [Description\_pt\_br.pdf,file
+        ]
+        [Documentation\_pt\_br.bib,file
+        ]
+        [Documentation\_pt\_br.tex,file
+        ]
+        [Documentation\_pt\_br.pdf,file
+        ]
+      ]
+      [src
+        [graph.cc,file
+        ]
+        [graph.h,file
+        ]
+        [inputter.cc,file
+        ]
+        [inputter.h,file
+        ]
+        [main.cc,file
+        ]
+      ]
+    ]
+ \end{forest}
+
+
+\bibliographystyle{plain} % Plain referencing style
+\bibliography{Documentation_pt_br} % Use the example bibliography file sample.bib
 
 \end{document}
